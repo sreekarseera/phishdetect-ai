@@ -1,1 +1,138 @@
-...
+body {
+  width: 340px;
+  margin: 0;
+  padding: 14px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #faf7f2;
+  color: #2b2b2b;
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 17px;
+  color: #6c3fa0;
+}
+
+h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: #6c3fa0;
+}
+
+textarea#input {
+  width: 100%;
+  min-height: 70px;
+  box-sizing: border-box;
+  padding: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  border: 1px solid #ddd0ea;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+input#email {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 8px;
+  padding: 6px 8px;
+  font-size: 13px;
+  border: 1px solid #ddd0ea;
+  border-radius: 6px;
+}
+
+button#analyze {
+  width: 100%;
+  margin-top: 10px;
+  padding: 9px;
+  background: #6c3fa0;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button#analyze:hover:not(:disabled) {
+  background: #5a3288;
+}
+
+button#analyze:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#result {
+  margin-top: 10px;
+  padding: 8px;
+  min-height: 14px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+#result.scam {
+  background: #fdecea;
+  border: 1px solid #d4af37;
+  color: #8a3b12;
+}
+
+#result.safe {
+  background: #f1eaf9;
+  border: 1px solid #6c3fa0;
+  color: #3d2260;
+}
+
+#result.error {
+  background: #fdecea;
+  border: 1px solid #c0392b;
+  color: #c0392b;
+}
+
+section {
+  margin-top: 14px;
+  padding-top: 8px;
+  border-top: 1px solid #e5ddf0;
+}
+
+button#exportHistory,
+button#exportBlocklist {
+  background: #d4af37;
+  color: #3d2b00;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 6px;
+}
+
+ul#history,
+ul#blocklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 110px;
+  overflow-y: auto;
+}
+
+ul#history li,
+ul#blocklist li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 4px 2px;
+  font-size: 12px;
+  border-bottom: 1px solid #f0eaf7;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #c0392b;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0 2px;
+}
