@@ -4,13 +4,16 @@ export async function getHistory() {
   return history;
 }
 
-// Add one entry to history. entry = {text, label, score, explanation, timestamp}
-// Skips the add if it's a re-analysis of the same text as the most recent
-// entry, so repeated clicks on unchanged input don't spam duplicate rows.
+// Add one entry to history. entry = {text, email, label, score, explanation, timestamp}
+// Skips the add if this exact (text, email) pair is already recorded, so
+// repeated clicks with unchanged input don't spam duplicate rows — but the
+// same message from a different sender still gets its own entry.
 export async function addHistoryEntry(entry) {
   const history = await getHistory();
-  const last = history[history.length - 1];
-  if (last && last.text === entry.text) return;
+  const isDuplicate = history.some(
+    (h) => h.text === entry.text && (h.email || "") === (entry.email || "")
+  );
+  if (isDuplicate) return;
   history.push(entry);
   await chrome.storage.local.set({ history });
 }

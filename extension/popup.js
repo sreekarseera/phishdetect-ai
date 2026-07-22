@@ -34,6 +34,7 @@ async function renderHistory() {
       const preview = entry.text.length > 50 ? entry.text.slice(0, 50) + "…" : entry.text;
       const label = entry.label === "LABEL_1" ? "🚩 Scam" : "✅ Safe";
       li.textContent = `${label} (${Math.round(entry.score * 100)}%) — ${preview}`;
+      li.title = entry.email ? `Sender: ${entry.email}` : "No sender email provided";
       historyEl.appendChild(li);
     });
 }
@@ -88,15 +89,16 @@ analyzeBtn.addEventListener("click", async () => {
       isScam ? "scam" : "safe"
     );
 
+    const email = emailEl.value.trim();
     await addHistoryEntry({
       text,
+      email,
       label: data.label,
       score: data.score,
       explanation: data.explanation,
       timestamp: new Date().toISOString(),
     });
 
-    const email = emailEl.value.trim();
     if (isScam && email) {
       await addBlocked(email);
       await renderBlocklist();
