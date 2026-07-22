@@ -5,8 +5,12 @@ export async function getHistory() {
 }
 
 // Add one entry to history. entry = {text, label, score, explanation, timestamp}
+// Skips the add if it's a re-analysis of the same text as the most recent
+// entry, so repeated clicks on unchanged input don't spam duplicate rows.
 export async function addHistoryEntry(entry) {
   const history = await getHistory();
+  const last = history[history.length - 1];
+  if (last && last.text === entry.text) return;
   history.push(entry);
   await chrome.storage.local.set({ history });
 }
