@@ -1,4 +1,4 @@
-# Your task: Dataset + Model hardening
+# Smaran's task: Dataset + Model hardening
 
 > **Note:** the original version of this task (build the first working model) is already done — Sreekar built it solo while you were unavailable. `backend/train_model.py`, `backend/dataset.csv` (211 rows), and `backend/model/model.joblib` all exist and work. This doc now covers the next phase: making the model more robust before the demo.
 

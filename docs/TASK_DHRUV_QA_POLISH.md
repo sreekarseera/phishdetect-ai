@@ -1,4 +1,4 @@
-# Your task: QA pass + extension polish
+# Dhruv's task: QA pass + extension polish
 
 > **Note:** the original version of this task (build storage.js/util.js/style.css) is already done — Sreekar built it solo while you were unavailable, then fixed a couple of bugs found during manual testing (mangled emoji from a missing charset, and duplicate history rows). This doc now covers the next phase: thorough QA and polish before the demo.
 
@@ -10,7 +10,7 @@ The core extension works end-to-end (classify → history → blocklist → expo
 - `extension/README.md`
 - Anything you find broken in `extension/popup.js`, `extension/storage.js`, `extension/util.js`, `extension/banner.js` — but **message Sreekar before changing these**, don't just push fixes silently, since he's the one who has to keep the pieces consistent.
 
-**Do not touch** `backend/` at all — that's Teammate A's and Sreekar's territory.
+**Do not touch** `backend/` at all — that's Smaran's and Sreekar's territory.
 
 ## Setup
 1. Get the latest code: `git pull`
@@ -31,6 +31,7 @@ Go through this checklist and note anything that looks wrong, confusing, or brok
 - [ ] Stop the backend (Ctrl+C in its terminal), click Analyze → shows a clear error message instead of hanging or failing silently
 - [ ] **Banner test** (this hasn't been confirmed working by anyone yet): add an email to the blocklist, then visit any webpage whose text contains that exact email (a Google Doc, a scratch HTML page, anything) → a purple warning banner should appear at the top of the page
 - [ ] Try an empty message (click Analyze with nothing typed) → should show a friendly message, not an error or a backend call
+- [ ] Analyze several messages in a row → the popup's overall size should stay stable (it used to visibly jump/grow on every click — fixed, but worth re-confirming)
 
 For anything that fails, write down: what you did, what you expected, what actually happened. Send that list to Sreekar rather than trying to fix backend/JS logic yourself.
 
