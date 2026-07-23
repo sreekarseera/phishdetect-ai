@@ -1,5 +1,10 @@
+html {
+  max-width: 340px;
+}
+
 body {
   width: 340px;
+  max-width: 340px;
   margin: 0;
   padding: 14px;
   font-family: system-ui, -apple-system, sans-serif;
@@ -61,6 +66,10 @@ button#analyze:hover:not(:disabled) {
 button#analyze:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+#result:empty {
+  display: none;
 }
 
 #result {
