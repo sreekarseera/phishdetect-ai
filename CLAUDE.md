@@ -15,7 +15,7 @@ This is a 24-48 hour hackathon project. The single goal is a **working demo**, n
 
 ## Speed rules
 
-- **No test suites, no CI setup.** Manual click-through testing only.
+- **No new test infrastructure, no CI setup.** The one exception that exists: `tests/run_all.py` (17 end-to-end checks, ~30s, see `tests/README.md`) — run it before every push. Don't expand it into a "real" test suite or add frameworks; anything it doesn't cover is manual click-through only.
 - **No new dependencies** (pip or otherwise) without flagging it to Sreekar first — every new install is a chance to burn 30+ minutes on an environment bug.
 - **Stay in your assigned files.** Three people are working in parallel (see `docs/TASKS_OVERVIEW.md`). Touching someone else's file without telling them causes merge conflicts and rework.
 - **Commit small, commit often** (every working increment), so teammates can pull working code instead of a half-finished file.
