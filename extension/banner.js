@@ -2,13 +2,15 @@
 // doesn't load declarative content scripts as modules), so this stays
 // self-contained instead of importing storage.js/util.js.
 (function () {
+  let dismissed = false;
+
   function extractEmails(text) {
     const matches = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g);
     return matches ? [...new Set(matches.map((e) => e.toLowerCase()))] : [];
   }
 
   function showBanner(matchedEmails) {
-    if (document.getElementById("phishdetect-banner")) return;
+    if (dismissed || document.getElementById("phishdetect-banner")) return;
 
     const banner = document.createElement("div");
     banner.id = "phishdetect-banner";
@@ -24,16 +26,41 @@
     dismiss.textContent = "✕";
     dismiss.style.cssText =
       "margin-left:12px;background:none;border:none;color:#fff;cursor:pointer;font-size:14px;";
-    dismiss.addEventListener("click", () => banner.remove());
+    dismiss.addEventListener("click", () => {
+      dismissed = true;
+      banner.remove();
+    });
 
     banner.appendChild(dismiss);
     document.body.prepend(banner);
   }
 
-  chrome.storage.local.get("blocklist", ({ blocklist = [] }) => {
-    if (!blocklist.length) return;
-    const pageEmails = extractEmails(document.body.innerText);
-    const matched = pageEmails.filter((email) => blocklist.includes(email));
-    if (matched.length) showBanner(matched);
+  function scanPage() {
+    if (dismissed) return;
+    chrome.storage.local.get("blocklist", ({ blocklist = [] }) => {
+      if (!blocklist.length) return;
+      const pageEmails = extractEmails(document.body.innerText);
+      const matched = pageEmails.filter((email) => blocklist.includes(email));
+      if (matched.length) showBanner(matched);
+    });
+  }
+
+  scanPage();
+
+  // Pages like Google Docs/Gmail render content after the initial load, or
+  // update it live as the user types — a one-time scan misses that entirely,
+  // which defeats the point of a "you're about to use a blocked address"
+  // warning. Re-scan (debounced) whenever the page's content changes.
+  let debounceTimer = null;
+  const observer = new MutationObserver(() => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(scanPage, 800);
+  });
+  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+
+  // Also re-scan immediately if the blocklist itself changes (e.g. the user
+  // just blocked an email via the popup) while this tab is already open.
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && changes.blocklist) scanPage();
   });
 })();
