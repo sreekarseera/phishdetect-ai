@@ -16,7 +16,9 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 pipeline = Pipeline([
-    ("tfidf", TfidfVectorizer()),
+    # ngram_range (1,2) lets the model see word pairs, so phrases like
+    # "do not share" and "share your details" are distinguishable.
+    ("tfidf", TfidfVectorizer(ngram_range=(1, 2))),
     ("clf", LogisticRegression(max_iter=1000)),
 ])
 
