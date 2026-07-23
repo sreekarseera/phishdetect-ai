@@ -1,38 +1,45 @@
 # PhishDetect AI Chrome Extension 🚫📩
 
-PhishDetect AI is a smart phishing and scam message detector powered by RoBERTa. It scans messages using AI and alerts users if a message seems suspicious, helping build digital literacy and protect from online threats.
+The Chrome (Manifest V3) side of PhishDetect AI. Talks to the local FastAPI
+backend for classification; keeps all history/blocklist state in
+`chrome.storage.local` (nothing is stored server-side).
 
 ## Features
 
-- 🧠 AI-powered phishing detection (RoBERTa model)
-- 🧾 History log of all scanned messages
-- 🚫 Blocklist of spam emails with sync and export
-- 📢 Alert banners on webpages with blocked emails
+- 🧠 ML-powered scam detection (scikit-learn TF-IDF + Logistic Regression, served by the backend)
+- 🧾 History log of analyzed messages, deduped by (message, sender) pair, sender shown on hover
+- 🚫 Blocklist of scam sender emails — auto-added when a scam has a sender, removable from the popup
+- 📢 Live warning banner on any webpage mentioning a blocked email — reacts to typing and blocklist changes without a page reload (works in iframes too)
 - 💾 Export history and blocklist to CSV
-- 🎨 Clean minimalist UI (Off-white, Purple, Gold palette)
+- 🎨 Clean minimalist UI (off-white, purple, gold palette)
 
-## How to Use
+## Files
 
-1. Install the Chrome extension by loading it as an unpacked extension via `chrome://extensions`.
-2. Run the backend (hosted on Railway or locally).
-3. Paste suspicious messages into the popup and scan them.
-4. Manage spam emails via blocklist and get real-time banner alerts.
+| File | Purpose |
+|---|---|
+| `manifest.json` | MV3 config; injects `banner.js` into all frames of all pages |
+| `popup.html` / `popup.js` | Analyze UI, history, blocklist, CSV export |
+| `banner.js` | Content script — scans pages for blocked emails, shows the warning banner |
+| `storage.js` | `chrome.storage.local` wrapper: `getHistory`, `addHistoryEntry`, `getBlocklist`, `addBlocked`, `removeBlocked` |
+| `util.js` | `exportToCsv(rows, filename)`, `extractEmails(text)` |
+| `style.css` | Popup styling |
 
 ## Setup
 
-### Backend
+1. Start the backend first (from the repo root — full steps in the root `README.md`):
+   ```bash
+   cd backend
+   source venv/bin/activate
+   uvicorn app:app --reload
+   ```
+2. Open `chrome://extensions`, enable **Developer mode**, click **Load unpacked**, and select this `extension/` folder.
+3. Click the extension icon, paste a message, Analyze.
 
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn app:app --reload
-```
+The backend URL is hardcoded to `http://localhost:8000` by design (local demo
+only — see `CLAUDE.md` in the repo root).
 
-### Extension
+## Known limitations
 
-1. Load `extension/` as an unpacked extension in Chrome.
-2. Make sure the backend URL is correct in the code (`popup.js`, `banner.js`).
-
-## Credits
-
-Built for the social good to promote digital literacy and cybersecurity awareness.
+See the root `README.md` — short version: canvas-rendered apps (Google Docs
+etc.) don't expose live-typed text to any extension, and content scripts can't
+run on `chrome://` pages or `data:` URLs.
