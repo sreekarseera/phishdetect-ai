@@ -29,7 +29,7 @@ Go through this checklist and note anything that looks wrong, confusing, or brok
 - [ ] Click **Export History** → a CSV downloads, opens cleanly in Numbers/Excel with columns for text/email/label/score/explanation/timestamp
 - [ ] Click **Export Blocklist** → a CSV downloads with the blocked emails
 - [ ] Stop the backend (Ctrl+C in its terminal), click Analyze → shows a clear error message instead of hanging or failing silently
-- [ ] **Banner test** (this hasn't been confirmed working by anyone yet): add an email to the blocklist, then visit any webpage whose text contains that exact email (a Google Doc, a scratch HTML page, anything) → a purple warning banner should appear at the top of the page
+- [ ] **Banner test** (already confirmed working via automated headless tests — this is just a human sanity check): add an email to the blocklist, then type that email into any **normal** webpage (e.g. a Gmail compose window) → a purple warning banner should appear within ~1 second, live, no reload. **Do not use Google Docs for this** — Docs renders text to canvas, so live typing there is invisible to all extensions (known limitation, documented in the root README, not a bug to report).
 - [ ] Try an empty message (click Analyze with nothing typed) → should show a friendly message, not an error or a backend call
 - [ ] Analyze several messages in a row → the popup's overall size should stay stable (it used to visibly jump/grow on every click — fixed, but worth re-confirming)
 

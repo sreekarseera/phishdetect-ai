@@ -3,8 +3,10 @@
 ## Goal
 The extension works, but nobody has tested it as "a stranger setting it up for the first time" or thought through what actually gets said/shown live in front of judges. That's your job — make sure the *demo* doesn't fail even if the code is fine.
 
+> **Update:** the root `README.md` is already written and pushed — **skip Step 2**. Your job is now Steps 1, 3, and 4. If your cold-start test (Step 1) finds the README instructions wrong or confusing, fix the README wording directly — that's still yours.
+
 ## Files you own
-- `README.md` (repo root — doesn't exist yet, you're creating it)
+- `README.md` (repo root — already written; you maintain/fix it based on your cold-start test)
 - `docs/DEMO_SCRIPT.md` (new file, you're creating it)
 
 You're not expected to write extension/backend code for this task. If you spot a bug, report it to Sreekar rather than fixing it yourself (see `CLAUDE.md`).
@@ -36,7 +38,7 @@ A short, literal script for the live demo — what to say and click, in order. S
 2. Paste a real-sounding scam message → click Analyze → point out the confidence score
 3. Paste a normal message → click Analyze → show it doesn't false-positive
 4. Add a sender email on a scam result → show it lands in Blocked Emails
-5. (If confirmed working) Visit a page mentioning that blocked email → show the warning banner
+5. Type the blocked email into a **Gmail compose window** (or any normal webpage) → the purple warning banner appears live as you type — this is the money moment, it's confirmed working. **Don't use Google Docs for this** (canvas rendering means live detection can't work there; Docs only shows the banner after a reload — usable as a bonus, not the main beat)
 6. Export History as CSV → briefly show the data is real/exportable
 7. One closing line on what's genuinely custom here (a real trained model, not a hardcoded keyword list) vs. what's a known limitation (small-ish training set, local-only — no deployed backend)
 
