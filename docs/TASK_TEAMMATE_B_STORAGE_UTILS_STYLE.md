@@ -1,107 +1,54 @@
-# Your task: Storage helpers, utility functions, and styling
+# Your task: QA pass + extension polish
+
+> **Note:** the original version of this task (build storage.js/util.js/style.css) is already done — Sreekar built it solo while you were unavailable, then fixed a couple of bugs found during manual testing (mangled emoji from a missing charset, and duplicate history rows). This doc now covers the next phase: thorough QA and polish before the demo.
 
 ## Goal
-Write three small, self-contained files for the Chrome extension. None of these depend on the backend or on anyone else's work — you can start immediately and test entirely on your own.
+The core extension works end-to-end (classify → history → blocklist → export → banner), but it's only been tested by one person for a short time. Your job is to actually try to break it, and make it look better while you're at it.
 
 ## Files you own (only edit these)
-- `extension/storage.js` (currently empty)
-- `extension/util.js` (currently empty)
-- `extension/style.css` (currently empty)
+- `extension/style.css`
+- `extension/README.md`
+- Anything you find broken in `extension/popup.js`, `extension/storage.js`, `extension/util.js`, `extension/banner.js` — but **message Sreekar before changing these**, don't just push fixes silently, since he's the one who has to keep the pieces consistent.
 
-**Do not touch** any other file (especially `popup.html` / `manifest.json` — they're already correct). If you think another file needs to change, message Sreekar first.
+**Do not touch** `backend/` at all — that's Teammate A's and Sreekar's territory.
 
-## Why this matters
-Sreekar's `popup.js` is going to call the exact function names below. If you rename something or change what it returns, his code breaks. Stick to these signatures exactly.
+## Setup
+1. Get the latest code: `git pull`
+2. Start the backend (in one terminal): `cd backend && source venv/bin/activate && uvicorn app:app --reload`
+3. Load the extension: `chrome://extensions` → enable Developer Mode → **Load unpacked** → select the `extension/` folder
 
-## Step 1 — `extension/storage.js`
-A thin wrapper around Chrome's `chrome.storage.local` API, so the rest of the extension never has to touch `chrome.storage` directly. Export these five functions (use `export` since `popup.js` is loaded as `type="module"`):
+## Step 1 — QA pass (do this first, before styling)
+Go through this checklist and note anything that looks wrong, confusing, or broken:
+- [ ] Analyze a clearly scammy message → shows "🚩 Potential scam" with a confidence %
+- [ ] Analyze a clearly normal message → shows "✅ Looks safe"
+- [ ] Analyze the exact same message + sender email twice in a row → only **one** row appears in History (not two)
+- [ ] Analyze the exact same message with a **different** sender email → a **new** row appears in History
+- [ ] Hover over a History row → a tooltip shows the sender email (or "No sender email provided" if left blank)
+- [ ] Add a sender email on a scam message → it appears under "Blocked Emails"
+- [ ] Click the ✕ next to a blocked email → it's removed from the list
+- [ ] Click **Export History** → a CSV downloads, opens cleanly in Numbers/Excel with columns for text/email/label/score/explanation/timestamp
+- [ ] Click **Export Blocklist** → a CSV downloads with the blocked emails
+- [ ] Stop the backend (Ctrl+C in its terminal), click Analyze → shows a clear error message instead of hanging or failing silently
+- [ ] **Banner test** (this hasn't been confirmed working by anyone yet): add an email to the blocklist, then visit any webpage whose text contains that exact email (a Google Doc, a scratch HTML page, anything) → a purple warning banner should appear at the top of the page
+- [ ] Try an empty message (click Analyze with nothing typed) → should show a friendly message, not an error or a backend call
 
-```js
-// Get the array of past analysis results. Returns [] if nothing saved yet.
-export async function getHistory() {
-  const { history = [] } = await chrome.storage.local.get("history");
-  return history;
-}
+For anything that fails, write down: what you did, what you expected, what actually happened. Send that list to Sreekar rather than trying to fix backend/JS logic yourself.
 
-// Add one entry to history. entry = {text, label, score, explanation, timestamp}
-export async function addHistoryEntry(entry) {
-  const history = await getHistory();
-  history.push(entry);
-  await chrome.storage.local.set({ history });
-}
+## Step 2 — Polish `style.css`
+Once you've done the QA pass, look at the popup with fresh eyes:
+- Does the off-white/purple/gold palette feel consistent and clean, or does anything look off?
+- Is the "Analyze" button's disabled/loading state ("Analyzing…") visually obvious?
+- Do the History and Blocklist sections look good with 10+ entries in them (scroll behavior, spacing)?
+- Anything you'd improve — spacing, font sizes, colors, hover states on buttons — go ahead and tweak `style.css` directly, it's low-risk since it only affects appearance.
 
-// Get the array of blocked email addresses. Returns [] if none.
-export async function getBlocklist() {
-  const { blocklist = [] } = await chrome.storage.local.get("blocklist");
-  return blocklist;
-}
-
-// Add an email to the blocklist (lowercase it, avoid duplicates).
-export async function addBlocked(email) {
-  const blocklist = await getBlocklist();
-  const normalized = email.toLowerCase();
-  if (!blocklist.includes(normalized)) {
-    blocklist.push(normalized);
-    await chrome.storage.local.set({ blocklist });
-  }
-}
-
-// Remove an email from the blocklist.
-export async function removeBlocked(email) {
-  const blocklist = await getBlocklist();
-  const updated = blocklist.filter(e => e !== email.toLowerCase());
-  await chrome.storage.local.set({ blocklist: updated });
-}
-```
-(This is a complete, working implementation — you can use it close to as-is.)
-
-## Step 2 — `extension/util.js`
-Two helper functions:
-
-```js
-// Turn an array of objects into a CSV file and trigger a download.
-export function exportToCsv(rows, filename) {
-  if (!rows.length) return;
-  const headers = Object.keys(rows[0]);
-  const csvLines = [
-    headers.join(","),
-    ...rows.map(row => headers.map(h => `"${String(row[h]).replace(/"/g, '""')}"`).join(","))
-  ];
-  const blob = new Blob([csvLines.join("\n")], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-// Pull email addresses out of a block of text.
-export function extractEmails(text) {
-  const matches = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g);
-  return matches ? [...new Set(matches.map(e => e.toLowerCase()))] : [];
-}
-```
-(Also complete — usable close to as-is.)
-
-## Step 3 — `extension/style.css`
-Style `extension/popup.html` (open it in a browser or via `chrome://extensions` once loaded, to see the current unstyled version). Look at the element IDs already in `popup.html`: `#input`, `#email`, `#analyze`, `#result`, `#history`, `#blocklist`, plus the export buttons. Go for the palette mentioned in `extension/README.md`: **off-white background, purple and gold accents**. Keep it simple — a clean popup (~350-400px wide is typical for Chrome extension popups), readable text, a clearly clickable "Analyze" button, and some visual distinction for scam vs. safe results in `#result` (e.g. red/gold tint for scam, green/purple tint for safe). Don't overthink it — a clean, legible popup beats an elaborate one you don't finish.
-
-## Step 4 — Test it yourself, without needing the backend or Sreekar's code
-You can test `storage.js` and `util.js` directly in Chrome's DevTools console once the extension is loaded unpacked (`chrome://extensions` → enable Developer Mode → "Load unpacked" → select the `extension/` folder → open the popup → right-click → Inspect):
-```js
-import('./storage.js').then(async m => {
-  await m.addBlocked('test@example.com');
-  console.log(await m.getBlocklist()); // should show ['test@example.com']
-});
-```
-For `style.css`, just open `popup.html` and visually check it looks right after loading the unpacked extension and clicking the toolbar icon.
+## Step 3 — Update `extension/README.md`
+It currently still describes the old RoBERTa-based backend. Update the "Setup" section to match what's actually true now (scikit-learn, `pip install -r requirements.txt`, `python3 train_model.py` before first run, etc. — check `backend/requirements.txt` and `backend/train_model.py` for the actual current steps).
 
 ## Done checklist
-- [ ] `storage.js` exports all 5 functions with these exact names, tested in the console
-- [ ] `util.js` exports both functions, tested in the console
-- [ ] `style.css` makes the popup look clean and on-brand (off-white/purple/gold)
-- [ ] Told Sreekar it's ready, so he can plug it into `popup.js` / `banner.js`
+- [ ] Full QA checklist above run through, results (pass/fail list) sent to Sreekar
+- [ ] Banner tested and confirmed working (or reported as broken)
+- [ ] `style.css` polish pass done
+- [ ] `extension/README.md` updated to match the current architecture
 
 ## If you get stuck
 Ping Sreekar. Don't spend more than ~20 minutes stuck on one thing — flag it instead.
