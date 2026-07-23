@@ -112,6 +112,10 @@ Response: {"label": "LABEL_0" | "LABEL_1", "score": <float 0-1>, "explanation": 
 - **Small iframes:** the banner uses `position: fixed`, so if the blocked email appears inside a small embedded iframe, the banner renders inside that iframe's box rather than across the full page.
 - **Local-only backend:** the API is hardcoded to `localhost:8000` — a deliberate hackathon scope cut, not a deployment story.
 
+## Testing
+
+`python3 tests/run_all.py` runs 17 automated end-to-end checks (popup flow + live banner) in an invisible headless Chrome — about 30 seconds, no manual clicking. See `tests/README.md`. Run it before every push.
+
 ## Contributing
 
 Read `CLAUDE.md` first — it documents the locked architecture decisions (scikit-learn only, stateless backend, fixed API/storage contracts) and the speed rules for this repo. Team task assignments live in `docs/`.
