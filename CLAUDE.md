@@ -19,6 +19,7 @@ This is a 24-48 hour hackathon project. The single goal is a **working demo**, n
 - **No new dependencies** (pip or otherwise) without flagging it to Sreekar first — every new install is a chance to burn 30+ minutes on an environment bug.
 - **Stay in your assigned files.** Three people are working in parallel (see `docs/TASKS_OVERVIEW.md`). Touching someone else's file without telling them causes merge conflicts and rework.
 - **Commit small, commit often** (every working increment), so teammates can pull working code instead of a half-finished file.
+- **Only Sreekar pushes to `main`.** Teammates work on their own branch (`smaran-model` / `dhruv-qa` / `shourya-demo`), push the branch, and message Sreekar to review + merge — see `docs/TASKS_OVERVIEW.md` for the exact commands.
 - **If stuck on one bug for more than ~20 minutes, simplify the feature instead of continuing to debug it.** A smaller working feature beats a bigger broken one at demo time.
 - **Prefer the obvious/boring solution over a clever one.** Copy-paste-obvious code is fine here.
 - **Hardcode `http://localhost:8000`** as the backend URL. No env config, no deployment — this is a local demo.

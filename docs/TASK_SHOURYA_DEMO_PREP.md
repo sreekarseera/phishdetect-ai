@@ -11,6 +11,8 @@ The extension works, but nobody has tested it as "a stranger setting it up for t
 
 You're not expected to write extension/backend code for this task. If you spot a bug, report it to Sreekar rather than fixing it yourself (see `CLAUDE.md`).
 
+**Git workflow:** after your cold-start clone, do your doc edits on a `shourya-demo` branch (`git checkout -b shourya-demo`), push that branch, and message Sreekar to review + merge — don't push to `main` (see `TASKS_OVERVIEW.md` ground rules).
+
 ## Step 1 — Cold-start test
 Pretend you've never seen this project before. On your own machine:
 ```bash

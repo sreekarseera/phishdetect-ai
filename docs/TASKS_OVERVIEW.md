@@ -26,6 +26,14 @@ Sreekar: available to unblock any track, fix anything flagged as broken (see the
 - C is almost entirely docs/process work — lowest risk of breaking anything, and genuinely useful (a cold-start test from someone who hasn't touched the code will catch setup problems the rest of us are now blind to).
 
 ## Ground rules for handoff
-- `git pull` before starting, `git push` when you have something working — small, frequent commits.
+- **Nobody pushes to `main` except Sreekar.** Work on your own branch and Sreekar reviews + merges:
+  ```bash
+  git pull                          # get latest main first
+  git checkout -b smaran-model      # your branch: smaran-model / dhruv-qa / shourya-demo
+  # ...work, commit small and often...
+  git push -u origin smaran-model   # then message Sreekar to review and merge
+  ```
+  For later updates on the same branch, just `git push`. To pick up new `main` changes into your branch: `git checkout main && git pull && git checkout <your-branch> && git merge main`.
+- Run `python3 tests/run_all.py` before pushing (see `tests/README.md`) — if a test fails that passed before your change, fix it or flag it before pushing.
 - If you find a bug outside your own files, report it to Sreekar rather than fixing it yourself — see `CLAUDE.md` for why (stay-in-your-lane rule exists to avoid merge conflicts and contract drift).
 - If something in `CLAUDE.md`'s locked contracts seems wrong, ask before changing it.
