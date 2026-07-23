@@ -13,7 +13,7 @@ The core extension works end-to-end (classify → history → blocklist → expo
 **Do not touch** `backend/` at all — that's Smaran's and Sreekar's territory.
 
 ## Setup
-1. Get the latest code: `git pull`
+1. Get the latest code and start your branch: `git pull && git checkout -b dhruv-qa` (push to this branch, NOT `main` — see `TASKS_OVERVIEW.md` ground rules)
 2. Start the backend (in one terminal): `cd backend && source venv/bin/activate && uvicorn app:app --reload`
 3. Load the extension: `chrome://extensions` → enable Developer Mode → **Load unpacked** → select the `extension/` folder
 

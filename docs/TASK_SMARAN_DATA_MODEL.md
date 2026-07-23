@@ -45,7 +45,7 @@ Check the printed validation accuracy, then re-run your Step 1 stress test again
 - [ ] Tested the current model against real-sounding (not templated) examples, wrote down what it got wrong
 - [ ] Added targeted new rows to `dataset.csv` covering those gaps
 - [ ] Retrained, confirmed accuracy holds and the earlier failures are fixed
-- [ ] Told Sreekar what changed so he can pull the updated `model.joblib`
+- [ ] Committed + pushed your `smaran-model` branch (NOT `main` — see `TASKS_OVERVIEW.md` ground rules) and messaged Sreekar to review + merge
 
 ## If you get stuck
 Ping Sreekar. Don't spend more than ~20 minutes stuck on one thing — flag it instead.
