@@ -105,6 +105,13 @@ Response: {"label": "LABEL_0" | "LABEL_1", "score": <float 0-1>, "explanation": 
 
 `LABEL_1` = scam, `LABEL_0` = safe.
 
+## Known limitations
+
+- **Canvas-rendered apps (Google Docs, Sheets, Slides, Figma, Canva):** these apps paint text onto a `<canvas>` instead of putting it in the page DOM, so live-typed text is invisible to any extension — the banner only catches emails present when the page loads. Normal DOM-based sites (Gmail, Outlook, WhatsApp Web, Discord, regular websites) work in real time.
+- **`chrome://` pages and `data:` URLs:** browsers block content scripts on these entirely — applies to every extension, not just this one.
+- **Small iframes:** the banner uses `position: fixed`, so if the blocked email appears inside a small embedded iframe, the banner renders inside that iframe's box rather than across the full page.
+- **Local-only backend:** the API is hardcoded to `localhost:8000` — a deliberate hackathon scope cut, not a deployment story.
+
 ## Contributing
 
 Read `CLAUDE.md` first — it documents the locked architecture decisions (scikit-learn only, stateless backend, fixed API/storage contracts) and the speed rules for this repo. Team task assignments live in `docs/`.
