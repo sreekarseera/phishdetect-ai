@@ -1,30 +1,26 @@
-# Task split — 3 people, parallel tracks
+# Task split — Phase 2 (hardening + polish)
 
-Full context/architecture: see `../CLAUDE.md` (rules, locked contracts) and the original plan at `~/.claude/plans/hazy-growing-moon.md` on Sreekar's machine.
+Full context/architecture: see `../CLAUDE.md` (rules, locked contracts).
 
-## Why split this way
-The two teammate tracks (Data/Model, and Storage/Utils/Style) don't depend on each other and don't depend on the final backend or popup — they only need to follow the **fixed contracts** in `CLAUDE.md`. That means all three tracks can start at the same time. Sreekar's track (backend + popup) is the integration point and the hardest part, so he owns it.
+## Status
+Phase 1 (get a working demo end-to-end) is **done**. Sreekar built the full stack solo while teammates were unavailable:
+- Backend: scikit-learn model (211-row dataset, 100% val accuracy, verified against novel out-of-template examples), FastAPI serving it
+- Extension: `storage.js`, `util.js`, `popup.js`, `banner.js`, `style.css` all implemented
+- Manually tested end-to-end in Chrome; found and fixed 3 real bugs (mangled emoji from missing charset, duplicate history rows on repeat clicks, missing sender-email tracking in history)
 
-## Tracks
+Repo: https://github.com/sreekarseera/phishdetect-ai — everything above is pushed to `main`.
 
-| Track | Owner | Files owned | Depends on |
+## What's left
+This is no longer "build from scratch" work — it's hardening and polish before the actual demo. Two parallel tracks:
+
+| Track | Owner | Focus | Doc |
 |---|---|---|---|
-| A — Data & Model | Teammate 1 | `backend/dataset.csv`, `backend/train_model.py`, `backend/model/model.joblib` (generated) | Nothing — start immediately |
-| B — Storage & UI utils | Teammate 2 | `extension/storage.js`, `extension/util.js`, `extension/style.css` | Nothing — start immediately (just follow the contracts in `CLAUDE.md`) |
-| C — Backend & Popup | Sreekar | `backend/app.py`, `backend/requirements.txt`, `extension/popup.js`, `extension/banner.js` | `app.py` needs Track A's `model.joblib` to fully test (can stub it and swap in later); `popup.js`/`banner.js` need Track B's functions to fully test (can stub them and swap in later) |
+| A — Model hardening | Teammate 1 | Stress-test the model against real (non-templated) examples, expand `dataset.csv` to cover gaps, retrain | `TASK_TEAMMATE_A_DATA_MODEL.md` |
+| B — QA + polish | Teammate 2 | Full manual QA pass (including the still-unconfirmed banner feature), `style.css` polish, README update | `TASK_TEAMMATE_B_STORAGE_UTILS_STYLE.md` |
 
-Full task briefs: `TASK_TEAMMATE_A_DATA_MODEL.md`, `TASK_TEAMMATE_B_STORAGE_UTILS_STYLE.md`, `TASK_SREEKAR_BACKEND_POPUP.md`.
-
-## Timeline (wall-clock, working in parallel)
-
-- **Hour 0-2:** All three start simultaneously. A builds dataset + trains a first model. B writes storage.js/util.js/style.css against the fixed contracts. Sreekar starts app.py against a placeholder model, and popup.js against stub versions of storage.js/util.js functions (so he isn't blocked waiting).
-- **Hour 2-3:** A hands off `model.joblib` to Sreekar. B hands off real `storage.js`/`util.js` to Sreekar. Sreekar swaps stubs for the real files.
-- **Hour 3-5:** Sreekar finishes popup.js integration and banner.js. A and B are now free — pull them onto testing, more dataset rows, or extra styling.
-- **Hour 5-6:** Everyone tests the full extension end-to-end together (see "Test it end-to-end" in each task doc).
-
-This gets a demoable product in **~5-6 hours of parallel work**, well inside the 24-48 hour window, even accounting for teammates needing more time on their pieces.
+Sreekar: available to unblock either track, fix anything flagged as broken (see the note in each doc — teammates should report issues rather than editing `popup.js`/`storage.js`/`app.py` themselves), and decide if/when to fold in any stretch goals (e.g. full-page scam-text scanning in `banner.js`, beyond just blocked-email matching).
 
 ## Ground rules for handoff
-- When your track's files are ready, tell Sreekar directly (don't just push and assume he'll notice) and say exactly what changed.
-- If you finish early, don't start touching someone else's files — ping Sreekar for the next task instead.
-- If something in `CLAUDE.md`'s contracts doesn't make sense or seems wrong, ask Sreekar before changing it — the other tracks are relying on it staying fixed.
+- `git pull` before starting, `git push` when you have something working — small, frequent commits.
+- If you find a bug outside your own files, report it to Sreekar rather than fixing it yourself — see `CLAUDE.md` for why (stay-in-your-lane rule exists to avoid merge conflicts and contract drift).
+- If something in `CLAUDE.md`'s locked contracts seems wrong, ask before changing it.
