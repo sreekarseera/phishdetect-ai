@@ -120,6 +120,11 @@ button#exportBlocklist {
   margin-bottom: 6px;
 }
 
+button#exportHistory:hover,
+button#exportBlocklist:hover {
+  background: #c19f2e;
+}
+
 ul#history,
 ul#blocklist {
   list-style: none;
@@ -140,6 +145,11 @@ ul#blocklist li {
   border-bottom: 1px solid #f0eaf7;
 }
 
+ul#history li:hover,
+ul#blocklist li:hover {
+  background: #f4eefb;
+}
+
 .remove-btn {
   background: none;
   border: none;
@@ -147,4 +157,8 @@ ul#blocklist li {
   cursor: pointer;
   font-size: 12px;
   padding: 0 2px;
+}
+
+.remove-btn:hover {
+  color: #8e2418;
 }

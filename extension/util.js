@@ -1,7 +1,15 @@
+// Preferred CSV column order — chrome.storage returns object keys
+// alphabetically, which puts "explanation" before "text" in exports.
+const COLUMN_ORDER = ["text", "email", "label", "score", "explanation", "timestamp"];
+
 // Turn an array of objects into a CSV file and trigger a download.
 export function exportToCsv(rows, filename) {
   if (!rows.length) return;
-  const headers = Object.keys(rows[0]);
+  const keys = Object.keys(rows[0]);
+  const headers = [
+    ...COLUMN_ORDER.filter((k) => keys.includes(k)),
+    ...keys.filter((k) => !COLUMN_ORDER.includes(k)),
+  ];
   const csvLines = [
     headers.join(","),
     ...rows.map((row) =>
