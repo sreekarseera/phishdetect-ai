@@ -50,8 +50,8 @@ extension/
   storage.js           chrome.storage.local wrapper (history + blocklist)
   util.js              CSV export + email regex extraction
   style.css            Popup styling
-docs/                  Team task docs and overview
-CLAUDE.md              Rules for contributors (locked architecture decisions)
+docs/                  Project plan, demo script, and example messages
+tests/                 Automated end-to-end test suite (17 checks)
 ```
 
 ## Setup
@@ -116,6 +116,6 @@ Response: {"label": "LABEL_0" | "LABEL_1", "score": <float 0-1>, "explanation": 
 
 `python3 tests/run_all.py` runs 17 automated end-to-end checks (popup flow + live banner) in an invisible headless Chrome — about 30 seconds, no manual clicking. See `tests/README.md`. Run it before every push.
 
-## Contributing
+## Architecture decisions
 
-Read `CLAUDE.md` first — it documents the locked architecture decisions (scikit-learn only, stateless backend, fixed API/storage contracts) and the speed rules for this repo. Team task assignments live in `docs/`.
+A few choices were locked deliberately to keep the build focused: a lightweight scikit-learn model (rather than a heavy transformer stack), a stateless backend, and fixed API/storage contracts so the extension and backend never drift apart. See `docs/TASKS_OVERVIEW.md` for the full plan.

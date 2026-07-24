@@ -1,39 +1,25 @@
-# Task split — Phase 2 (hardening + polish), 4-person team
+# Project plan & task split
 
-Full context/architecture: see `../CLAUDE.md` (rules, locked contracts).
+How the work was organized. For setup and architecture, see the root `README.md`.
 
-## Status
-Phase 1 (get a working demo end-to-end) is **done**. Sreekar built the full stack solo while teammates were unavailable:
-- Backend: scikit-learn model (211-row dataset, 100% val accuracy, verified against novel out-of-template examples), FastAPI serving it
-- Extension: `storage.js`, `util.js`, `popup.js`, `banner.js`, `style.css` all implemented, plus a fix for the popup visibly resizing on every Analyze click
-- Manually tested end-to-end in Chrome; found and fixed several real bugs (mangled emoji from missing charset, duplicate history rows, missing sender-email tracking, popup resize jumpiness)
+## Phase 1 — working end-to-end build
 
-Repo: https://github.com/sreekarseera/phishdetect-ai — everything above is pushed to `main`.
+- **Backend:** scikit-learn model (TF-IDF + Logistic Regression) trained on our own dataset, served by FastAPI (`POST /classify/`)
+- **Extension:** `popup.js`, `storage.js`, `util.js`, `banner.js`, `style.css` — analyze UI, client-side history/blocklist (`chrome.storage.local`), CSV export, and the live warning banner
+- Tested end-to-end in Chrome; fixed real bugs found along the way (emoji charset, duplicate history rows, sender-email tracking, popup resize stability)
 
-## What's left
-Hardening and polish before the demo, split into three parallel tracks:
+## Phase 2 — hardening & polish
 
-| Track | Owner | Focus | Doc |
-|---|---|---|---|
-| A — Model hardening | Smaran | Stress-test the model against real (non-templated) examples, expand `dataset.csv` to cover gaps, retrain | `TASK_SMARAN_DATA_MODEL.md` |
-| B — QA + polish | Dhruv | Full manual QA pass (including the still-unconfirmed banner feature), `style.css` polish, extension README update | `TASK_DHRUV_QA_POLISH.md` |
-| C — Demo readiness | Shourya | Cold-start setup test, root `README.md`, a literal demo script, pre-tested example messages for the live run | `TASK_SHOURYA_DEMO_PREP.md` |
+Split into three parallel tracks:
 
-Sreekar: available to unblock any track, fix anything flagged as broken (see the note in each doc — teammates should report issues rather than editing `popup.js`/`storage.js`/`app.py`/`banner.js` themselves), and decide if/when to fold in any stretch goals (e.g. full-page scam-text scanning in `banner.js`, beyond just blocked-email matching).
+| Track | Focus |
+|---|---|
+| A — Model hardening | Stress-test the model against realistic non-templated messages, expand `dataset.csv` to cover gaps, retrain. Also evaluated (and rejected, with data) merging a large public SMS-spam corpus. |
+| B — QA + polish | Full QA pass (CSV integrity, list scrolling, layout stability, banner), `style.css` polish, extension README update |
+| C — Demo readiness | Cold-start clone-and-run test, root `README.md`, demo script, and pre-tested example messages (`DEMO_SCRIPT.md`, `demo-examples.txt`) |
 
-## Why this split
-- A and B don't touch the same files (backend vs. extension), so they're safe to run at the same time.
-- C is almost entirely docs/process work — lowest risk of breaking anything, and genuinely useful (a cold-start test from someone who hasn't touched the code will catch setup problems the rest of us are now blind to).
+## Engineering practices
 
-## Ground rules for handoff
-- **Nobody pushes to `main` except Sreekar.** Work on your own branch and Sreekar reviews + merges:
-  ```bash
-  git pull                          # get latest main first
-  git checkout -b smaran-model      # your branch: smaran-model / dhruv-qa / shourya-demo
-  # ...work, commit small and often...
-  git push -u origin smaran-model   # then message Sreekar to review and merge
-  ```
-  For later updates on the same branch, just `git push`. To pick up new `main` changes into your branch: `git checkout main && git pull && git checkout <your-branch> && git merge main`.
-- Run `python3 tests/run_all.py` before pushing (see `tests/README.md`) — if a test fails that passed before your change, fix it or flag it before pushing.
-- If you find a bug outside your own files, report it to Sreekar rather than fixing it yourself — see `CLAUDE.md` for why (stay-in-your-lane rule exists to avoid merge conflicts and contract drift).
-- If something in `CLAUDE.md`'s locked contracts seems wrong, ask before changing it.
+- **Branch-based workflow:** work on a feature branch, open a pull request, review, then merge to `main` (`main` is protected against direct pushes).
+- **Automated tests:** `python3 tests/run_all.py` runs 17 end-to-end checks (popup flow + live banner) in headless Chrome — run before every push. See `tests/README.md`.
+- Locked architecture decisions kept the build shippable under the deadline: scikit-learn only (no heavy transformer stack), a stateless backend, and fixed API/storage contracts.

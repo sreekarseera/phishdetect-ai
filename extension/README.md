@@ -35,8 +35,7 @@ backend for classification; keeps all history/blocklist state in
 2. Open `chrome://extensions`, enable **Developer mode**, click **Load unpacked**, and select this `extension/` folder.
 3. Click the extension icon, paste a message, Analyze.
 
-The backend URL is hardcoded to `http://localhost:8000` by design (local demo
-only — see `CLAUDE.md` in the repo root).
+The backend URL is hardcoded to `http://localhost:8000` by design (local demo only).
 
 ## Known limitations
 
