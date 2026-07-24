@@ -2,7 +2,7 @@
 
 A Chrome extension + FastAPI backend that detects scam and phishing messages using machine learning. Paste a suspicious message into the popup, get an instant scam/safe verdict with a confidence score, and build a blocklist of scam sender emails — the extension then warns you with a banner on any page where a blocked email appears, in real time.
 
-Built for a hackathon by **Sreekar, Smaran, Dhruv, and Shourya**, based on [kundancoding/Scam-Detector-Podvod](https://github.com/kundancoding/Scam-Detector-Podvod).
+Built for a hackathon by **Sreekar, Smaran, Dhruv, and Shourya**.
 
 ## Features
 
