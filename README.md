@@ -4,6 +4,10 @@ A Chrome extension + FastAPI backend that detects scam and phishing messages usi
 
 Built for a hackathon by **Sreekar, Smaran, Dhruv, and Shourya**.
 
+![PhishDetect AI warning banner appearing live in Gmail when a blocked scam email is typed into a compose window](docs/assets/banner-demo.png)
+
+*The live warning banner in action: the moment a blocked scam email is typed anywhere on a normal web page — here, a Gmail compose window — PhishDetect AI flags it instantly, with no page reload.*
+
 ## Features
 
 - 🧠 ML-powered scam detection (TF-IDF + Logistic Regression, scikit-learn)
@@ -31,7 +35,7 @@ Built for a hackathon by **Sreekar, Smaran, Dhruv, and Shourya**.
 ```
 
 - The **backend is stateless** — it only classifies text. All history and blocklist data lives in the extension via `chrome.storage.local`.
-- The model is a scikit-learn `Pipeline` (`TfidfVectorizer` → `LogisticRegression`) trained on `backend/dataset.csv` (~200 labeled scam/legit messages).
+- The model is a scikit-learn `Pipeline` (`TfidfVectorizer` → `LogisticRegression`) trained on `backend/dataset.csv` (280 labeled messages, balanced 140 scam / 140 legit).
 - `banner.js` uses a `MutationObserver` (debounced) plus a `chrome.storage.onChanged` listener, so the banner appears the moment a blocked email shows up on a page or gets added to the blocklist — no reload required.
 
 ## Project structure
